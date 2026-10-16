@@ -25,7 +25,6 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      overflow: auto;
     }
 
     #unity-container {
@@ -104,27 +103,12 @@
       color: #fff;
       text-shadow: 0 1px 3px #000;
     }
-
-    @media (max-width: 600px) {
-      body {
-        align-items: center;
-      }
-
-      #unity-footer {
-        right: 4px;
-        bottom: 4px;
-      }
-    }
   </style>
 </head>
 
 <body>
   <div id="unity-container">
-    <canvas id="unity-canvas"
-      width="1200"
-      height="540"
-      tabindex="-1">
-    </canvas>
+    <canvas id="unity-canvas" width="1200" height="540" tabindex="-1"></canvas>
 
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
@@ -151,7 +135,6 @@
 
       div.textContent = msg;
       div.style.padding = "10px";
-      div.style.marginTop = "5px";
 
       if (type === "error") {
         div.style.background = "red";
@@ -164,20 +147,18 @@
       warningBanner.appendChild(div);
 
       if (type !== "error") {
-        setTimeout(() => {
-          div.remove();
-        }, 5000);
+        setTimeout(() => div.remove(), 5000);
       }
     }
 
     const buildUrl = "Build";
-    const loaderUrl = buildUrl + "/bouninunity.loader.js";
+    const loaderUrl = buildUrl + "/bouninunity2.loader.js";
 
     const config = {
       arguments: [],
-      dataUrl: buildUrl + "/bouninunity.data",
-      frameworkUrl: buildUrl + "/bouninunity.framework.js",
-      codeUrl: buildUrl + "/bouninunity.wasm",
+      dataUrl: buildUrl + "/bouninunity2.data",
+      frameworkUrl: buildUrl + "/bouninunity2.framework.js",
+      codeUrl: buildUrl + "/bouninunity2.wasm",
       streamingAssetsUrl: "StreamingAssets",
       companyName: "DefaultCompany",
       productName: "bounin",
@@ -186,10 +167,10 @@
     };
 
     function resizeGame() {
-      const maxWidth = window.innerWidth;
-      const maxHeight = window.innerHeight;
-      const width = Math.min(maxWidth, maxHeight * 20 / 9);
-
+      const width = Math.min(
+        window.innerWidth,
+        window.innerHeight * 20 / 9
+      );
       container.style.width = width + "px";
     }
 
@@ -214,6 +195,10 @@
       }).catch((message) => {
         alert(message);
       });
+    };
+
+    script.onerror = () => {
+      alert("ゲームの読み込みに失敗しました。Buildフォルダのファイル名を確認してください。");
     };
 
     document.body.appendChild(script);
