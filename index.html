@@ -19,23 +19,22 @@
       background: #000;
       color: #fff;
       font-family: sans-serif;
-      overflow: hidden;
     }
 
     body {
+      min-height: 100vh;
       display: flex;
       justify-content: center;
       align-items: center;
+      overflow: hidden;
     }
 
-    /* ゲーム画面を中央に、20:9の比率で配置 */
     #unity-container {
       position: relative;
       width: min(100vw, calc(100vh * 20 / 9));
       aspect-ratio: 20 / 9;
       background: #000;
       flex: none;
-      overflow: hidden;
     }
 
     #unity-canvas {
@@ -111,7 +110,12 @@
 
 <body>
   <div id="unity-container">
-    <canvas id="unity-canvas" width="1200" height="540" tabindex="-1"></canvas>
+    <canvas
+      id="unity-canvas"
+      width="1200"
+      height="540"
+      tabindex="-1">
+    </canvas>
 
     <div id="unity-loading-bar">
       <div id="unity-logo"></div>
@@ -135,6 +139,7 @@
     function unityShowBanner(msg, type) {
       const warningBanner = document.querySelector("#unity-warning");
       const div = document.createElement("div");
+
       div.textContent = msg;
       div.style.padding = "10px";
 
@@ -153,6 +158,7 @@
       }
     }
 
+    // 最新のUnityビルド：bouninunity3
     const buildUrl = "Build";
     const loaderUrl = buildUrl + "/bouninunity3.loader.js";
 
@@ -168,9 +174,15 @@
       showBanner: unityShowBanner
     };
 
+    // 画面の中央に配置し、20:9の比率を維持する
     function resizeGame() {
       const ratio = 20 / 9;
-      const width = Math.min(window.innerWidth, window.innerHeight * ratio);
+
+      const width = Math.min(
+        window.innerWidth,
+        window.innerHeight * ratio
+      );
+
       const height = width / ratio;
 
       container.style.width = width + "px";
@@ -189,19 +201,24 @@
       createUnityInstance(canvas, config, (progress) => {
         document.querySelector("#unity-progress-bar-full")
           .style.width = (100 * progress) + "%";
+
       }).then((unityInstance) => {
         document.querySelector("#unity-loading-bar").style.display = "none";
 
         document.querySelector("#unity-fullscreen-button").onclick = () => {
           unityInstance.SetFullscreen(1);
         };
+
       }).catch((message) => {
         alert(message);
       });
     };
 
     script.onerror = () => {
-      alert("ゲームの読み込みに失敗しました。Buildフォルダのファイル名を確認してください。");
+      alert(
+        "ゲームの読み込みに失敗しました。\n" +
+        "Buildフォルダ内のbouninunity3ファイルを確認してください。"
+      );
     };
 
     document.body.appendChild(script);
